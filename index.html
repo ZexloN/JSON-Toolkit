@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Toolkit</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #0b0f14;
+      color: #e6edf3;
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 1px solid #202832;
+      padding: 18px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d1218;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: #58a6ff;
+    }
+
+    .badge {
+      font-size: 12px;
+      color: #8b949e;
+      border: 1px solid #30363d;
+      padding: 6px 10px;
+      border-radius: 20px;
+    }
+
+    main {
+      max-width: 1250px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      margin-bottom: 25px;
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: #8b949e;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    button {
+      border: 1px solid #30363d;
+      background: #161b22;
+      color: #e6edf3;
+      padding: 9px 15px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.15s;
+    }
+
+    button:hover {
+      background: #212832;
+      border-color: #58a6ff;
+    }
+
+    button.primary {
+      background: #238636;
+      border-color: #238636;
+    }
+
+    button.primary:hover {
+      background: #2ea043;
+    }
+
+    .status {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #8b949e;
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #8b949e;
+    }
+
+    .dot.valid {
+      background: #3fb950;
+    }
+
+    .dot.invalid {
+      background: #f85149;
+    }
+
+    .editor {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .panel {
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #0d1117;
+    }
+
+    .panel-header {
+      padding: 12px 15px;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #161b22;
+    }
+
+    .panel-header strong {
+      font-size: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 500px;
+      resize: vertical;
+      border: none;
+      outline: none;
+      background: #0d1117;
+      color: #e6edf3;
+      padding: 18px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      tab-size: 2;
+    }
+
+    pre {
+      height: 500px;
+      overflow: auto;
+      padding: 18px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e6edf3;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .error {
+      margin-top: 15px;
+      border: 1px solid #f85149;
+      background: #1b1113;
+      color: #ff7b72;
+      padding: 12px 15px;
+      border-radius: 8px;
+      display: none;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .info {
+      margin-top: 25px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      border: 1px solid #30363d;
+      background: #0d1117;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .card-title {
+      color: #8b949e;
+      font-size: 12px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-value {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      color: #484f58;
+      padding: 35px 0;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .editor {
+        grid-template-columns: 1fr;
+      }
+
+      .info {
+        grid-template-columns: 1fr;
+      }
+
+      .status {
+        margin-left: 0;
+      }
+
+      .toolbar {
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">{<span>JSON</span>} Toolkit</div>
+  <div class="badge">Vanilla JavaScript</div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>JSON Toolkit</h1>
+    <p>Format, validate, minify and inspect JSON directly in your browser.</p>
+  </section>
+
+  <div class="toolbar">
+
+    <button class="primary" onclick="formatJSON()">
+      Format
+    </button>
+
+    <button onclick="minifyJSON()">
+      Minify
+    </button>
+
+    <button onclick="validateJSON()">
+      Validate
+    </button>
+
+    <button onclick="copyJSON()">
+      Copy
+    </button>
+
+    <button onclick="loadExample()">
+      Example
+    </button>
+
+    <button onclick="clearAll()">
+      Clear
+    </button>
+
+    <div class="status">
+      <span id="statusDot" class="dot"></span>
+      <span id="statusText">Waiting for JSON</span>
+    </div>
+
+  </div>
+
+  <section class="editor">
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <strong>Input</strong>
+        <span id="inputSize">0 characters</span>
+      </div>
+
+      <textarea
+        id="input"
+        spellcheck="false"
+        placeholder='Paste your JSON here...'
+      ></textarea>
+
+    </div>
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <strong>Output</strong>
+        <span id="outputSize">0 characters</span>
+      </div>
+
+      <pre id="output">Your formatted JSON will appear here.</pre>
+
+    </div>
+
+  </section>
+
+  <div id="error" class="error"></div>
+
+  <section class="info">
+
+    <div class="card">
+      <div class="card-title">Type</div>
+      <div class="card-value" id="jsonType">—</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Keys</div>
+      <div class="card-value" id="jsonKeys">—</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Size</div>
+      <div class="card-value" id="jsonSize">—</div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  JSON Toolkit · Built with HTML, CSS & JavaScript
+</footer>
+
+
+<script>
+
+const input = document.getElementById("input");
+const output = document.getElementById("output");
+
+const statusDot = document.getElementById("statusDot");
+const statusText = document.getElementById("statusText");
+
+const errorBox = document.getElementById("error");
+
+const inputSize = document.getElementById("inputSize");
+const outputSize = document.getElementById("outputSize");
+
+const jsonType = document.getElementById("jsonType");
+const jsonKeys = document.getElementById("jsonKeys");
+const jsonSize = document.getElementById("jsonSize");
+
+
+input.addEventListener("input", () => {
+
+  inputSize.textContent =
+    input.value.length + " characters";
+
+  if (input.value.trim() === "") {
+    resetStatus();
+    return;
+  }
+
+  try {
+
+    const data = JSON.parse(input.value);
+
+    setValid();
+
+    updateStats(data);
+
+  } catch (error) {
+
+    setInvalid(error.message);
+
+  }
+
+});
+
+
+function parseJSON() {
+
+  if (!input.value.trim()) {
+    throw new Error("Input is empty.");
+  }
+
+  return JSON.parse(input.value);
+
+}
+
+
+function formatJSON() {
+
+  try {
+
+    const data = parseJSON();
+
+    const formatted =
+      JSON.stringify(data, null, 2);
+
+    output.textContent = formatted;
+
+    outputSize.textContent =
+      formatted.length + " characters";
+
+    setValid();
+
+    updateStats(data);
+
+    hideError();
+
+  } catch (error) {
+
+    setInvalid(error.message);
+    showError(error.message);
+
+  }
+
+}
+
+
+function minifyJSON() {
+
+  try {
+
+    const data = parseJSON();
+
+    const minified =
+      JSON.stringify(data);
+
+    output.textContent = minified;
+
+    outputSize.textContent =
+      minified.length + " characters";
+
+    setValid();
+
+    updateStats(data);
+
+    hideError();
+
+  } catch (error) {
+
+    setInvalid(error.message);
+    showError(error.message);
+
+  }
+
+}
+
+
+function validateJSON() {
+
+  try {
+
+    const data = parseJSON();
+
+    setValid();
+
+    updateStats(data);
+
+    showError("✓ Valid JSON");
+
+    errorBox.style.borderColor = "#3fb950";
+    errorBox.style.color = "#3fb950";
+    errorBox.style.background = "#0d1b11";
+
+  } catch (error) {
+
+    setInvalid(error.message);
+    showError("Invalid JSON: " + error.message);
+
+  }
+
+}
+
+
+function copyJSON() {
+
+  const text = output.textContent;
+
+  if (
+    !text ||
+    text === "Your formatted JSON will appear here."
+  ) {
+    return;
+  }
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+
+      const oldText = statusText.textContent;
+
+      statusText.textContent = "Copied!";
+
+      setTimeout(() => {
+        statusText.textContent = oldText;
+      }, 1200);
+
+    });
+
+}
+
+
+function loadExample() {
+
+  const example = {
+    user: {
+      id: 1024,
+      username: "developer",
+      active: true
+    },
+
+    projects: [
+      {
+        name: "Security Lab",
+        language: "JavaScript"
+      },
+
+      {
+        name: "JSON Toolkit",
+        language: "JavaScript"
+      }
+    ],
+
+    settings: {
+      theme: "dark",
+      notifications: true
+    }
+  };
+
+  input.value =
+    JSON.stringify(example, null, 2);
+
+  input.dispatchEvent(new Event("input"));
+
+  formatJSON();
+
+}
+
+
+function clearAll() {
+
+  input.value = "";
+
+  output.textContent =
+    "Your formatted JSON will appear here.";
+
+  inputSize.textContent =
+    "0 characters";
+
+  outputSize.textContent =
+    "0 characters";
+
+  jsonType.textContent = "—";
+  jsonKeys.textContent = "—";
+  jsonSize.textContent = "—";
+
+  hideError();
+  resetStatus();
+
+}
+
+
+function updateStats(data) {
+
+  let type = Array.isArray(data)
+    ? "Array"
+    : typeof data === "object" && data !== null
+      ? "Object"
+      : typeof data;
+
+  jsonType.textContent = type;
+
+  let keys = 0;
+
+  if (
+    typeof data === "object" &&
+    data !== null
+  ) {
+    keys = Object.keys(data).length;
+  }
+
+  jsonKeys.textContent = keys;
+
+  jsonSize.textContent =
+    new Blob([JSON.stringify(data)]).size + " B";
+
+}
+
+
+function setValid() {
+
+  statusDot.className = "dot valid";
+
+  statusText.textContent =
+    "Valid JSON";
+
+}
+
+
+function setInvalid(message) {
+
+  statusDot.className = "dot invalid";
+
+  statusText.textContent =
+    "Invalid JSON";
+
+}
+
+
+function resetStatus() {
+
+  statusDot.className = "dot";
+
+  statusText.textContent =
+    "Waiting for JSON";
+
+}
+
+
+function showError(message) {
+
+  errorBox.textContent = message;
+  errorBox.style.display = "block";
+
+}
+
+
+function hideError() {
+
+  errorBox.style.display = "none";
+
+  errorBox.style.borderColor = "#f85149";
+  errorBox.style.color = "#ff7b72";
+  errorBox.style.background = "#1b1113";
+
+}
+
+</script>
+
+</body>
+</html>
